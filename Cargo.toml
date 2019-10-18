@@ -1,0 +1,13 @@
+[package]
+name = "php-opcache-exporter-rs"
+version = "0.1.0"
+authors = ["Matthew Wynn <matthew@matthewwynn.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+prometheus_exporter_base = { path = "../prometheus_exporter_base" }
+fastcgi-client = { git = "https://github.com/m-wynn/fastcgi-client-rs" }
+tokio = "0.2.0-alpha.6"
+failure = "0.1.6"
