@@ -44,7 +44,7 @@ async fn main() {
 
             let pc: Vec<(PrometheusMetric<'_>, MetricValue)> = vec![
                 (
-                    PrometheusMetric::new("opcache_enabled", MetricType::Gauge, "Opcache Enabled"),
+                    PrometheusMetric::new("opcache_opcache_enabled", MetricType::Gauge, "Opcache Enabled"),
                     MetricValue::Bool(op.opcache_enabled),
                 ),
                 (
@@ -103,7 +103,144 @@ async fn main() {
                     ),
                     MetricValue::Float(op.memory_usage.current_wasted_percentage),
                 ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_interned_strings_usage_buffer_size",
+                        MetricType::Gauge,
+                        "Opcache Interned Strings Buffer Size",
+                    ),
+                    MetricValue::Int(op.interned_strings_usage.buffer_size),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_interned_strings_usage_used_memory",
+                        MetricType::Gauge,
+                        "Opcache Interned Strings Used Memory",
+                    ),
+                    MetricValue::Int(op.interned_strings_usage.used_memory),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_interned_strings_usage_free_memory",
+                        MetricType::Gauge,
+                        "Opcache Interned Strings Free Memory",
+                    ),
+                    MetricValue::Int(op.interned_strings_usage.free_memory),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_interned_strings_usage_number_of_strings",
+                        MetricType::Gauge,
+                        "Opcache Interned Strings Number of Strings",
+                    ),
+                    MetricValue::Int(op.interned_strings_usage.number_of_strings),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_num_cached_scripts",
+                        MetricType::Gauge,
+                        "Opcache Cached Scripts",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.num_cached_scripts),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_num_cached_keys",
+                        MetricType::Gauge,
+                        "Opcache Cached Keys",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.num_cached_keys),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_max_cached_keys",
+                        MetricType::Gauge,
+                        "Opcache Max Cached Keys",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.max_cached_keys),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_hits",
+                        MetricType::Counter,
+                        "Opcache Hits",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.max_cached_keys),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_start_time",
+                        MetricType::Gauge,
+                        "Opcache Start Time",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.start_time),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_last_restart_time",
+                        MetricType::Gauge,
+                        "Opcache Last Restart Time",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.last_restart_time),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_oom_restarts",
+                        MetricType::Counter,
+                        "Opcache OOM Restarts",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.oom_restarts),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_hash_restarts",
+                        MetricType::Counter,
+                        "Opcache Hash Restarts",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.hash_restarts),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_manual_restarts",
+                        MetricType::Counter,
+                        "Opcache Manual Restarts",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.manual_restarts),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_misses",
+                        MetricType::Counter,
+                        "Opcache Misses",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.misses),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_blacklist_misses",
+                        MetricType::Counter,
+                        "Opcache Blacklist Misses",
+                    ),
+                    MetricValue::Int(op.opcache_statistics.blacklist_misses),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_blacklist_miss_ratio",
+                        MetricType::Gauge,
+                        "Opcache Blacklist Miss Ratio",
+                    ),
+                    MetricValue::Float(op.opcache_statistics.blacklist_miss_ratio),
+                ),
+                (
+                    PrometheusMetric::new(
+                        "opcache_opcache_statistics_opcache_hit_rate",
+                        MetricType::Gauge,
+                        "Opcache Hit Rate",
+                    ),
+                    MetricValue::Float(op.opcache_statistics.opcache_hit_rate),
+                ),
             ];
+
 
             let giant_string = pc
                 .iter()
@@ -118,11 +255,6 @@ async fn main() {
                 })
                 .collect::<Vec<String>>()
                 .join("\n");
-            // let mut s = pc.render_header();
-
-            // let mut attributes = Vec::new();
-            // attributes.push(("folder", "/var/log/"));
-            // s.push_str(&pc.render_sample(Some(&attributes), 2));
 
             Ok(giant_string)
         }
