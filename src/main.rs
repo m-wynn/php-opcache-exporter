@@ -1,12 +1,14 @@
 #![warn(rust_2018_idioms)]
 use failure::{bail, format_err, Error};
-use fastcgi_client::{empty, Client, Params};
+use fastcgi_client::{Client, Params};
 use log::{error, trace};
 use opcache::Opcache;
 use prometheus_exporter_base::{render_prometheus, MetricType, PrometheusMetric};
 use std::net::SocketAddr;
+// use async_std::prelude::*;
+use std::net::TcpStream;
 use tokio;
-use tokio::net::TcpStream;
+// use async_std::io;
 
 mod opcache;
 
@@ -259,13 +261,12 @@ async fn main() {
             Ok(giant_string)
         }
     })
-    .await
-    .unwrap();
+    .await;
 }
 
 async fn fetch_opcache_stats() -> Result<Opcache, Error> {
     let addr: SocketAddr = "127.0.0.1:9000".parse()?;
-    let stream = TcpStream::connect(&addr).await?;
+    let stream = TcpStream::connect(&addr)?;
 
     let mut client = Client::new(stream, false);
 
@@ -283,9 +284,9 @@ async fn fetch_opcache_stats() -> Result<Opcache, Error> {
         .set_server_name("opcache-exporter/0.1")
         .set_content_type("")
         .set_content_length("0");
+
     let output = client
-        .do_request(&params, &mut empty())
-        .await
+        .do_request(&params, &mut std::io::empty())
         .map_err(|_| format_err!("Bad"))?
         .get_stdout()
         .unwrap();
