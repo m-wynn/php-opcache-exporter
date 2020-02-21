@@ -266,7 +266,7 @@ fn render_opcache_stats(op: Opcache) -> Result<String, Error> {
                 MetricType::Counter,
                 "Opcache Hits",
             ),
-            MetricValue::Int(op.opcache_statistics.max_cached_keys),
+            MetricValue::Int(op.opcache_statistics.hits),
         ),
         (
             PrometheusMetric::new(
